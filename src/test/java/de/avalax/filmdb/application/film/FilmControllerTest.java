@@ -32,4 +32,10 @@ public class FilmControllerTest {
 
         verify(filmApplicationService).addFilmToRepository(anAddFilmToRepositoryCommand().withName("aFilmName").build());
     }
+
+    @Test
+    public void shouldShowNothing() throws Exception {
+        mvc.perform(get("/"))
+                .andExpect(status().isOk());
+    }
 }
