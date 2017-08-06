@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <FindBugsFilter>
 	<Match>
-		<Class name="~.*\.*Test" />
+		<Bug pattern="UWF_UNWRITTEN_FIELD" type="UWF_UNWRITTEN_FIELD"/>
+	 </Match>
+	 <Match>
+		<Bug pattern="NP_UNWRITTEN_FIELD" type="NP_UNWRITTEN_FIELD"/>
 	 </Match>
 </FindBugsFilter>

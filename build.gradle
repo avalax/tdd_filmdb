@@ -73,10 +73,17 @@ checkstyle {
 }
 
 findbugs {
-    toolVersion="3.0.1"
+    toolVersion = "3.0.1"
     sourceSets = [sourceSets.main]
     excludeFilter = file("findbugs.xml")
     reportsDir = file("$project.buildDir/reports/findbugs")
     ignoreFailures = false
     effort = "max"
+}
+
+tasks.withType(FindBugs) {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
 }
