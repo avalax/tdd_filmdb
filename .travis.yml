@@ -8,3 +8,10 @@ script:
 after_success:
   - ./gradlew jacocoTestReport coveralls
   - ./gradlew versioneye-update
+deploy:
+  provider: heroku
+  api_key:
+    secure: C9BfWROyny36fCEFYM8pUNgCx8ZPMWLD6FnP66/y9f6o1BXg09+m8cdtbm8s/jzhU8fwRTesLJqlIdivF1jjceTE5MsU7bCnK6IWtY3V5YRGqNaLQ2Rou75gY4RQgQ4C8taWCtvaQse/KylwddGWklIubbNnmerugNoozWPjcsP2cIGKx3jN33bZJ+Se+yy8JZAhtjglKDYZgrgIFTcQht4N0JraACLeAH7cHGfSCEzAiOcwp4sqKJe1yL/KnYFmLAE3NZOXa0LUkvxOA4LVRvJ3GTpUG1wtVOaXSH9W7s6mXegaWB93UZmRKuhsoI92CcYz3hRCOZsbcaxWYhi5rxlYG2ofQ0WDxlGU1+Dbx2yijJ3bHi1z99Q1VNjqVyIPleS98ocLQRBKuWDoa9gNLvxakd0Nff5g40rTE0ZeCBI8GBrP5PYkZJ+ITztRWwm4KPAk/mJ4YlMQf09M2TazeSSyx189wA91sg75wKFC5az+NV3zuA2pZJlCy0A1IBGVvopqH/zmXRWvfcocmI4/NfIF+UKmWyla6T7C6LtAfCtEX1v5ap5C3TlVoOqdrliqd5Mwnx0SNH9vGhcOczE7JhLbTLflPjWiLAfyd4oyOybmOO+mVF9U3azdee+Um6LFt9UogCNpDpkT8FXzk4m3lmPdXJsQqX88AMAUCGQ1Uj8=
+  app: tdd_filmdb
+  on:
+    repo: avalax/tdd_filmdb
