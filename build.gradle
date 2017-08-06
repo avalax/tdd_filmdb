@@ -1,0 +1,77 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.6.RELEASE")
+        classpath 'org.standardout:gradle-versioneye-plugin:1.5.0'
+    }
+}
+
+plugins {
+    id 'jacoco'
+    id 'com.github.kt3k.coveralls' version '2.6.3'
+}
+
+apply plugin: 'war'
+apply plugin: 'java'
+apply plugin: 'pmd'
+apply plugin: 'checkstyle'
+apply plugin: 'findbugs'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'org.standardout.versioneye'
+
+jar {
+    baseName = 'tdd_filmdb'
+    version =  '0.1.0'
+}
+
+repositories {
+    mavenCentral()
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter-web")
+    testCompile("org.springframework.boot:spring-boot-starter-test")
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+
+    afterEvaluate {
+        classDirectories = files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: '**/Application.class')
+        })
+    }
+}
+
+pmd {
+    sourceSets = [sourceSets.main]
+    ruleSetFiles = files("pmd.xml")
+    reportsDir = file("$project.buildDir/reports/pmd")
+    ignoreFailures = false
+    consoleOutput = true
+}
+
+checkstyle {
+    sourceSets = [sourceSets.main]
+    configFile = file("checkstyle.xml")
+    reportsDir = file("$project.buildDir/reports/checkstyle")
+    ignoreFailures = false
+}
+
+findbugs {
+    sourceSets = [sourceSets.main]
+    excludeFilter = file("findbugs.xml")
+    reportsDir = file("$project.buildDir/reports/findbugs")
+    ignoreFailures = false
+    effort = "max"
+}

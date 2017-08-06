@@ -1,0 +1,10 @@
+language: java
+jdk:
+  - oraclejdk8
+before_script:
+  - ./gradlew dependencies
+script:
+  - ./gradlew build
+after_success:
+  - ./gradlew jacocoTestReport coveralls
+  - ./gradlew versioneye-update
