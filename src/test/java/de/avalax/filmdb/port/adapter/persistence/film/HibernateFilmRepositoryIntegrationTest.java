@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static de.avalax.filmdb.domain.model.FilmBuilder.aFilm;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
@@ -16,14 +15,24 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class HibernateFilmRepositoryIntegrationTest {
 
     @Autowired
-    private HibernateFilmRepository hibernateFilmRepository;
+    private HibernateFilmRepository filmRepository;
 
     @Test
     public void shouldSaveFilmToRepository() throws Exception {
-        Film film = aFilm().withName("aFilmName").build();
+        Film film = Film.builder().name("aFilmName").build();
 
-        FilmId filmId = hibernateFilmRepository.save(film);
+        FilmId filmId = filmRepository.save(film);
 
-        assertThat(hibernateFilmRepository.load(filmId)).isEqualTo(aFilm().withName("aFilmName").build());
+        assertThat(filmRepository.load(filmId)).isEqualTo(Film.builder().name("aFilmName").id(filmId.getId()).build());
+    }
+
+    @Test
+    public void shouldDeleteFilmFromRepository() throws Exception {
+        Film film = Film.builder().name("aFilmName").build();
+
+        FilmId filmId = filmRepository.save(film);
+        filmRepository.delete(filmId);
+
+        assertThat(filmRepository.loadAll()).isEmpty();
     }
 }

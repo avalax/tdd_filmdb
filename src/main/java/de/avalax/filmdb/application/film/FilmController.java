@@ -5,8 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.RedirectView;
 
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
 @RequestMapping("/")
@@ -26,4 +25,9 @@ public class FilmController {
         return new RedirectView("/");
     }
 
+    @RequestMapping(method = DELETE)
+    public RedirectView deleteFilmFromRepository(DeleteFilmToRepositoryCommand deleteFilmToRepositoryCommand) {
+        filmApplicationService.deleteFilmFromRepository(deleteFilmToRepositoryCommand);
+        return new RedirectView("/");
+    }
 }

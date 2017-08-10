@@ -1,6 +1,7 @@
 package de.avalax.filmdb.application.film;
 
 import de.avalax.filmdb.domain.model.Film;
+import de.avalax.filmdb.domain.model.FilmId;
 import de.avalax.filmdb.domain.model.FilmRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,14 @@ public class FilmApplicationService {
     private FilmRepository filmRepository;
 
     public void addFilmToRepository(AddFilmToRepositoryCommand addFilmToRepositoryCommand) {
-        filmRepository.save(new Film(addFilmToRepositoryCommand.getName()));
+        Film film = Film.builder()
+                .name(addFilmToRepositoryCommand.getName())
+                .build();
+        filmRepository.save(film);
+    }
+
+    public void deleteFilmFromRepository(DeleteFilmToRepositoryCommand deleteFilmToRepositoryCommand) {
+        String id = deleteFilmToRepositoryCommand.getId();
+        filmRepository.delete(new FilmId(Long.valueOf(id)));
     }
 }
