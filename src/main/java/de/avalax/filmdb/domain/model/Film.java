@@ -21,12 +21,16 @@ public class Film {
         // This constructor is used by hibernate
     }
 
+    public Film(String name) {
+        this.name = name;
+    }
+
     public FilmId getId() {
         return new FilmId(id);
     }
 
-    public Film(String name) {
-        this.name = name;
+    public String getName() {
+        return name;
     }
 
     @Override

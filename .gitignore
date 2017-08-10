@@ -3,6 +3,7 @@
 .idea
 *.iml
 /out/
+/src-gen/
 
 # Ignore Gradle GUI config
 gradle-app.setting

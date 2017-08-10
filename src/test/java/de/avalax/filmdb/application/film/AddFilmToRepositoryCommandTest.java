@@ -2,9 +2,8 @@ package de.avalax.filmdb.application.film;
 
 import org.junit.Test;
 
-import static de.avalax.filmdb.application.film.AddFilmToRepositoryCommandBuilder.*;
+import static de.avalax.filmdb.application.film.AddFilmToRepositoryCommandBuilder.anAddFilmToRepositoryCommand;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.*;
 
 public class AddFilmToRepositoryCommandTest {
     @Test
