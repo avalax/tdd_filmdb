@@ -38,28 +38,17 @@ public class ApplicationAcceptanceTest {
     private FilmRepository filmRepository;
 
     @Test
-    public void postNewFilmShouldBeAddedToRepository() throws Exception {
+    public void newFilmShouldBeAddedToRepository() throws Exception {
         mockMvc.perform(post("/").param("name", "aFilmName"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/"));
+                .andExpect(redirectedUrl("/film/1"));
 
         FilmAssert.assertThat(filmRepository.load(FilmId.builder().id(1L).build())).hasName("aFilmName");
     }
 
     @Test
-    public void deleteExistingFilmShouldBeRemovedFromRepository() throws Exception {
-        filmRepository.save(Film.builder().name("anyFilmName").build());
-
-        mockMvc.perform(delete("/1"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/"));
-
-        Assertions.assertThat(filmRepository.loadAll()).isEmpty();
-    }
-
-    @Test
     public void showExistingFilmFromRepository() throws Exception {
-        filmRepository.save(Film.builder().name("awesomeFilm").build());
+        filmRepository.save(Film.builder().name("aFilmName").build());
 
         ModelAndView modelAndView = mockMvc.perform(get("/1"))
                 .andExpect(status().isOk())
@@ -67,7 +56,29 @@ public class ApplicationAcceptanceTest {
                 .andReturn().getModelAndView();
 
         Film film = (Film) modelAndView.getModelMap().get("film");
-        FilmAssert.assertThat(film).hasName("awesomeFilm");
+        FilmAssert.assertThat(film).hasName("aFilmName");
+    }
+
+    @Test
+    public void modifyExistingFilmInRepository() throws Exception {
+        filmRepository.save(Film.builder().name("oldFilmName").build());
+
+        mockMvc.perform(post("/1").param("name", "newFilmName"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/film/1"));
+
+        FilmAssert.assertThat(filmRepository.load(FilmId.builder().id(1L).build())).hasName("newFilmName");
+    }
+
+    @Test
+    public void deleteExistingFilmFromRepository() throws Exception {
+        filmRepository.save(Film.builder().name("anyFilmName").build());
+
+        mockMvc.perform(delete("/1"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/"));
+
+        Assertions.assertThat(filmRepository.loadAll()).isEmpty();
     }
 
     @Test

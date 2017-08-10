@@ -11,8 +11,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.List;
 
-import static de.avalax.filmdb.application.film.AddFilmCommandBuilder.anAddFilmToRepositoryCommand;
+import static de.avalax.filmdb.application.film.AddFilmCommandBuilder.anAddFilmCommand;
 import static de.avalax.filmdb.application.film.DeleteFilmCommandBuilder.aDeleteFilmToRepositoryCommand;
+import static de.avalax.filmdb.application.film.ModifyFilmCommandBuilder.*;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
@@ -29,13 +30,27 @@ public class FilmApplicationServiceTest {
 
     @Test
     public void shouldAddFilmToRepository() throws Exception {
-        AddFilmCommand addFilmCommand = anAddFilmToRepositoryCommand()
+        AddFilmCommand addFilmCommand = anAddFilmCommand()
                 .withName("aFilmName")
                 .build();
 
         filmApplicationService.addFilm(addFilmCommand);
 
         verify(filmRepository).save(Film.builder().name("aFilmName").build());
+    }
+
+    @Test
+    public void shouldSaveModifiedFilmIntoRepository() throws Exception {
+        FilmId filmId = FilmId.builder().id(1L).build();
+        doReturn(Film.builder().id(1L).build()).when(filmRepository).load(filmId);
+        ModifyFilmCommand modifyFilmCommand = aModifyFilmCommand()
+                .withId(1L)
+                .withName("aFilmName")
+                .build();
+
+        filmApplicationService.modifyFilm(modifyFilmCommand);
+
+        verify(filmRepository).save(Film.builder().id(1L).name("aFilmName").build());
     }
 
     @Test

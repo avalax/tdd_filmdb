@@ -1,5 +1,6 @@
 package de.avalax.filmdb.application.film;
 
+import de.avalax.filmdb.domain.model.FilmId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,14 +28,20 @@ public class FilmController {
 
     @RequestMapping(method = POST)
     public RedirectView addFilm(AddFilmCommand addFilmCommand) {
-        filmApplicationService.addFilm(addFilmCommand);
-        return new RedirectView("/");
+        FilmId filmId = filmApplicationService.addFilm(addFilmCommand);
+        return new RedirectView("/film/" + filmId.getId());
     }
 
     @RequestMapping(path = "/{id}", method = GET)
     public ModelAndView showFilm(ShowFilmCommand showFilmCommand, ModelMap model) {
         model.addAttribute("film", filmApplicationService.loadFilm(showFilmCommand));
         return new ModelAndView("film");
+    }
+
+    @RequestMapping(path = "/{id}", method = POST)
+    public RedirectView modifyFilm(ModifyFilmCommand modifyFilmCommand) {
+        filmApplicationService.modifyFilm(modifyFilmCommand);
+        return new RedirectView("/film/" + modifyFilmCommand.getId());
     }
 
     @RequestMapping(path = "/{id}", method = DELETE)

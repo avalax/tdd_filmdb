@@ -3,7 +3,7 @@ package de.avalax.filmdb.application.film;
 public class AddFilmCommandBuilder {
     private String name;
 
-    public static AddFilmCommandBuilder anAddFilmToRepositoryCommand() {
+    public static AddFilmCommandBuilder anAddFilmCommand() {
         return new AddFilmCommandBuilder();
     }
 

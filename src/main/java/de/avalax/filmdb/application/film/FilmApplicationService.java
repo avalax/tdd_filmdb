@@ -14,11 +14,11 @@ public class FilmApplicationService {
     @Autowired
     private FilmRepository filmRepository;
 
-    public void addFilm(AddFilmCommand addFilmCommand) {
+    public FilmId addFilm(AddFilmCommand addFilmCommand) {
         Film film = Film.builder()
                 .name(addFilmCommand.getName())
                 .build();
-        filmRepository.save(film);
+        return filmRepository.save(film);
     }
 
     public void deleteFilmFromRepository(DeleteFilmCommand deleteFilmCommand) {
@@ -33,5 +33,12 @@ public class FilmApplicationService {
     public Film loadFilm(ShowFilmCommand showFilmCommand) {
         FilmId filmId = FilmId.builder().id(showFilmCommand.getId()).build();
         return filmRepository.load(filmId);
+    }
+
+    public void modifyFilm(ModifyFilmCommand modifyFilmCommand) {
+        FilmId id = FilmId.builder().id(modifyFilmCommand.getId()).build();
+        Film film = filmRepository.load(id);
+        film.setName(modifyFilmCommand.getName());
+        filmRepository.save(film);
     }
 }
