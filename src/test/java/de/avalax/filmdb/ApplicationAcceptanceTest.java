@@ -39,16 +39,29 @@ public class ApplicationAcceptanceTest {
 
     @Test
     public void newFilmShouldBeAddedToRepository() throws Exception {
-        mockMvc.perform(post("/").param("name", "aFilmName"))
+        mockMvc.perform(post("/")
+                .param("name", "aFilmName")
+                .param("genre", "aFilmGenre")
+                .param("year", "2017")
+                .param("rating", "3"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/film/1"));
 
-        FilmAssert.assertThat(filmRepository.load(FilmId.builder().id(1L).build())).hasName("aFilmName");
+        FilmAssert.assertThat(filmRepository.load(FilmId.builder().id(1L).build()))
+                .hasName("aFilmName")
+                .hasGenre("aFilmGenre")
+                .hasYear(2017)
+                .hasRating(3);
     }
 
     @Test
     public void showExistingFilmFromRepository() throws Exception {
-        filmRepository.save(Film.builder().name("aFilmName").build());
+        filmRepository.save(Film.builder()
+                .name("aFilmName")
+                .genre("aFilmGenre")
+                .year(2017)
+                .rating(2)
+                .build());
 
         ModelAndView modelAndView = mockMvc.perform(get("/1"))
                 .andExpect(status().isOk())
@@ -56,18 +69,30 @@ public class ApplicationAcceptanceTest {
                 .andReturn().getModelAndView();
 
         Film film = (Film) modelAndView.getModelMap().get("film");
-        FilmAssert.assertThat(film).hasName("aFilmName");
+        FilmAssert.assertThat(film)
+                .hasName("aFilmName")
+                .hasGenre("aFilmGenre")
+                .hasYear(2017)
+                .hasRating(2);
     }
 
     @Test
     public void modifyExistingFilmInRepository() throws Exception {
         filmRepository.save(Film.builder().name("oldFilmName").build());
 
-        mockMvc.perform(post("/1").param("name", "newFilmName"))
+        mockMvc.perform(post("/1")
+                .param("name", "newFilmName")
+                .param("genre", "newFilmGenre")
+                .param("year", "1999")
+                .param("rating", "1"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/film/1"));
 
-        FilmAssert.assertThat(filmRepository.load(FilmId.builder().id(1L).build())).hasName("newFilmName");
+        FilmAssert.assertThat(filmRepository.load(FilmId.builder().id(1L).build()))
+                .hasName("newFilmName")
+                .hasGenre("newFilmGenre")
+                .hasYear(1999)
+                .hasRating(1);
     }
 
     @Test

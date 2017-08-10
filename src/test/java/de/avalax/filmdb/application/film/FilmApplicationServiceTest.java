@@ -32,11 +32,19 @@ public class FilmApplicationServiceTest {
     public void shouldAddFilmToRepository() throws Exception {
         AddFilmCommand addFilmCommand = anAddFilmCommand()
                 .withName("aFilmName")
+                .withGenre("aFilmGenre")
+                .withYear(2017)
+                .withRating(2)
                 .build();
 
         filmApplicationService.addFilm(addFilmCommand);
 
-        verify(filmRepository).save(Film.builder().name("aFilmName").build());
+        verify(filmRepository).save(Film.builder()
+                .name("aFilmName")
+                .genre("aFilmGenre")
+                .year(2017)
+                .rating(2)
+                .build());
     }
 
     @Test
@@ -46,11 +54,20 @@ public class FilmApplicationServiceTest {
         ModifyFilmCommand modifyFilmCommand = aModifyFilmCommand()
                 .withId(1L)
                 .withName("aFilmName")
+                .withGenre("aFilmGenre")
+                .withYear(2017)
+                .withRating(2)
                 .build();
 
         filmApplicationService.modifyFilm(modifyFilmCommand);
 
-        verify(filmRepository).save(Film.builder().id(1L).name("aFilmName").build());
+        verify(filmRepository).save(Film.builder()
+                .id(1L)
+                .name("aFilmName")
+                .genre("aFilmGenre")
+                .year(2017)
+                .rating(2)
+                .build());
     }
 
     @Test

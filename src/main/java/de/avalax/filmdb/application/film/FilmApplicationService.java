@@ -17,6 +17,9 @@ public class FilmApplicationService {
     public FilmId addFilm(AddFilmCommand addFilmCommand) {
         Film film = Film.builder()
                 .name(addFilmCommand.getName())
+                .genre(addFilmCommand.getGenre())
+                .rating(addFilmCommand.getRating())
+                .year(addFilmCommand.getYear())
                 .build();
         return filmRepository.save(film);
     }
@@ -39,6 +42,9 @@ public class FilmApplicationService {
         FilmId id = FilmId.builder().id(modifyFilmCommand.getId()).build();
         Film film = filmRepository.load(id);
         film.setName(modifyFilmCommand.getName());
+        film.setGenre(modifyFilmCommand.getGenre());
+        film.setYear(modifyFilmCommand.getYear());
+        film.setRating(modifyFilmCommand.getRating());
         filmRepository.save(film);
     }
 }

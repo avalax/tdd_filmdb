@@ -22,6 +22,12 @@ public class Film {
     @NotNull
     private String name;
 
+    private String genre;
+
+    private Integer rating;
+
+    private Integer year;
+
     @Tolerate
     public Film() {
         // This constructor is used by hibernate

@@ -7,6 +7,9 @@ public class ModifyFilmCommandBuilder {
 
     private long id;
     private String name;
+    private String genre;
+    private Integer year;
+    private Integer rating;
 
     public static ModifyFilmCommandBuilder aModifyFilmCommand() {
         return new ModifyFilmCommandBuilder();
@@ -22,10 +25,28 @@ public class ModifyFilmCommandBuilder {
         return this;
     }
 
+    public ModifyFilmCommandBuilder withGenre(String genre) {
+        this.genre = genre;
+        return this;
+    }
+
+    public ModifyFilmCommandBuilder withYear(int year) {
+        this.year = year;
+        return this;
+    }
+
+    public ModifyFilmCommandBuilder withRating(int rating) {
+        this.rating = rating;
+        return this;
+    }
+
     public ModifyFilmCommand build() {
         ModifyFilmCommand modifyFilmCommand = new ModifyFilmCommand();
         modifyFilmCommand.setId(id);
         modifyFilmCommand.setName(name);
+        modifyFilmCommand.setGenre(genre);
+        modifyFilmCommand.setYear(year);
+        modifyFilmCommand.setRating(rating);
         return modifyFilmCommand;
     }
 }
