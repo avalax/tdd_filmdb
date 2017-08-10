@@ -1,9 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>tdd_filmdb</title>
-</head>
-<body>
-</body>
-</html>
+<#include "layout.ftl">
+<#macro header>
+  <title>Film</title>
+</#macro>
+
+<#macro content>
+  <h1>Film</h1>
+</#macro>
+
+<@layout/>
