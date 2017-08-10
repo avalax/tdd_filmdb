@@ -39,7 +39,7 @@ public class ApplicationAcceptanceTest {
 
     @Test
     public void newFilmShouldBeAddedToRepository() throws Exception {
-        mockMvc.perform(post("/")
+        mockMvc.perform(post("/film")
                 .param("name", "aFilmName")
                 .param("genre", "aFilmGenre")
                 .param("year", "2017")
@@ -63,7 +63,7 @@ public class ApplicationAcceptanceTest {
                 .rating(2)
                 .build());
 
-        ModelAndView modelAndView = mockMvc.perform(get("/1"))
+        ModelAndView modelAndView = mockMvc.perform(get("/film/1"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("film"))
                 .andReturn().getModelAndView();
@@ -80,7 +80,7 @@ public class ApplicationAcceptanceTest {
     public void modifyExistingFilmInRepository() throws Exception {
         filmRepository.save(Film.builder().name("oldFilmName").build());
 
-        mockMvc.perform(post("/1")
+        mockMvc.perform(post("/film/1")
                 .param("name", "newFilmName")
                 .param("genre", "newFilmGenre")
                 .param("year", "1999")
@@ -99,7 +99,7 @@ public class ApplicationAcceptanceTest {
     public void deleteExistingFilmFromRepository() throws Exception {
         filmRepository.save(Film.builder().name("anyFilmName").build());
 
-        mockMvc.perform(delete("/1"))
+        mockMvc.perform(delete("/film/1"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"));
 

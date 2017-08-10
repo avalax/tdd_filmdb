@@ -26,25 +26,25 @@ public class FilmController {
         return new ModelAndView("index");
     }
 
-    @RequestMapping(method = POST)
+    @RequestMapping(path = "/film", method = POST)
     public RedirectView addFilm(AddFilmCommand addFilmCommand) {
         FilmId filmId = filmApplicationService.addFilm(addFilmCommand);
         return new RedirectView("/film/" + filmId.getId());
     }
 
-    @RequestMapping(path = "/{id}", method = GET)
+    @RequestMapping(path = "/film/{id}", method = GET)
     public ModelAndView showFilm(ShowFilmCommand showFilmCommand, ModelMap model) {
         model.addAttribute("film", filmApplicationService.loadFilm(showFilmCommand));
         return new ModelAndView("film");
     }
 
-    @RequestMapping(path = "/{id}", method = POST)
+    @RequestMapping(path = "/film/{id}", method = POST)
     public RedirectView modifyFilm(ModifyFilmCommand modifyFilmCommand) {
         filmApplicationService.modifyFilm(modifyFilmCommand);
         return new RedirectView("/film/" + modifyFilmCommand.getId());
     }
 
-    @RequestMapping(path = "/{id}", method = DELETE)
+    @RequestMapping(path = "film/{id}", method = DELETE)
     public RedirectView deleteFilm(DeleteFilmCommand deleteFilmCommand) {
         filmApplicationService.deleteFilmFromRepository(deleteFilmCommand);
         return new RedirectView("/");
