@@ -108,8 +108,8 @@ public class ApplicationAcceptanceTest {
 
     @Test
     public void showAllFilmsFromRepository() throws Exception {
-        filmRepository.save(Film.builder().name("Film A").build());
-        filmRepository.save(Film.builder().name("Film B").build());
+        filmRepository.save(Film.builder().name("Film A").genre("Genre A").year(1999).rating(3).build());
+        filmRepository.save(Film.builder().name("Film B").genre("Genre B").year(2017).rating(1).build());
 
         ModelAndView modelAndView = mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
@@ -117,7 +117,10 @@ public class ApplicationAcceptanceTest {
                 .andReturn().getModelAndView();
 
         @SuppressWarnings("unchecked")
-        List<Film> films = (List<Film>) modelAndView.getModelMap().get("films");
+        List<Film> films = (List) modelAndView.getModelMap().get("films");
         Assertions.assertThat(films).extracting(Film::getName).contains("Film A", "Film B");
+        Assertions.assertThat(films).extracting(Film::getGenre).contains("Genre A", "Genre B");
+        Assertions.assertThat(films).extracting(Film::getYear).contains(1999, 2017);
+        Assertions.assertThat(films).extracting(Film::getRating).contains(3, 1);
     }
 }
