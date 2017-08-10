@@ -1,13 +1,13 @@
 package de.avalax.filmdb.application.film;
 
 public class ShowFilmCommandBuilder {
-    private String id;
+    private Long id;
 
     public static ShowFilmCommandBuilder aShowFilmCommand() {
         return new ShowFilmCommandBuilder();
     }
 
-    public ShowFilmCommandBuilder withId(String id) {
+    public ShowFilmCommandBuilder withId(Long id) {
         this.id = id;
         return this;
     }

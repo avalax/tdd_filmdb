@@ -7,14 +7,14 @@ public class AddFilmCommandBuilder {
         return new AddFilmCommandBuilder();
     }
 
+    public AddFilmCommandBuilder withName(String name) {
+        this.name = name;
+        return this;
+    }
+
     public AddFilmCommand build() {
         AddFilmCommand addFilmCommand = new AddFilmCommand();
         addFilmCommand.setName(name);
         return addFilmCommand;
-    }
-
-    public AddFilmCommandBuilder withName(String name) {
-        this.name = name;
-        return this;
     }
 }

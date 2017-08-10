@@ -22,8 +22,7 @@ public class FilmApplicationService {
     }
 
     public void deleteFilmFromRepository(DeleteFilmCommand deleteFilmCommand) {
-        String id = deleteFilmCommand.getId();
-        FilmId filmId = FilmId.builder().id(Long.valueOf(id)).build();
+        FilmId filmId = FilmId.builder().id(deleteFilmCommand.getId()).build();
         filmRepository.delete(filmId);
     }
 
@@ -32,8 +31,7 @@ public class FilmApplicationService {
     }
 
     public Film loadFilm(ShowFilmCommand showFilmCommand) {
-        String id = showFilmCommand.getId();
-        FilmId filmId = FilmId.builder().id(Long.valueOf(id)).build();
+        FilmId filmId = FilmId.builder().id(showFilmCommand.getId()).build();
         return filmRepository.load(filmId);
     }
 }

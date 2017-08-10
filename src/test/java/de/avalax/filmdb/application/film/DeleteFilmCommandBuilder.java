@@ -1,13 +1,13 @@
 package de.avalax.filmdb.application.film;
 
 public class DeleteFilmCommandBuilder {
-    private String id;
+    private Long id;
 
     public static DeleteFilmCommandBuilder aDeleteFilmToRepositoryCommand() {
         return new DeleteFilmCommandBuilder();
     }
 
-    public DeleteFilmCommandBuilder withId(String id) {
+    public DeleteFilmCommandBuilder withId(Long id) {
         this.id = id;
         return this;
     }

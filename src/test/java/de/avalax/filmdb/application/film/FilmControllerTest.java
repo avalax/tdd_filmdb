@@ -50,13 +50,13 @@ public class FilmControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"));
 
-        verify(filmApplicationService).deleteFilmFromRepository(aDeleteFilmToRepositoryCommand().withId("1").build());
+        verify(filmApplicationService).deleteFilmFromRepository(aDeleteFilmToRepositoryCommand().withId(1L).build());
     }
 
     @Test
     public void showFilmFromRepository() throws Exception {
         Film expectedFilm = Film.builder().name("aFilmToShow").build();
-        doReturn(expectedFilm).when(filmApplicationService).loadFilm(ShowFilmCommandBuilder.aShowFilmCommand().withId("1").build());
+        doReturn(expectedFilm).when(filmApplicationService).loadFilm(ShowFilmCommandBuilder.aShowFilmCommand().withId(1L).build());
 
         ModelAndView modelAndView = mvc.perform(get("/1"))
                 .andExpect(status().isOk())

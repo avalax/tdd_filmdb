@@ -41,7 +41,7 @@ public class FilmApplicationServiceTest {
     @Test
     public void shouldDeleteFilmFromRepository() throws Exception {
         DeleteFilmCommand deleteFilmCommand = aDeleteFilmToRepositoryCommand()
-                .withId("1")
+                .withId(1L)
                 .build();
 
         filmApplicationService.deleteFilmFromRepository(deleteFilmCommand);
@@ -52,7 +52,7 @@ public class FilmApplicationServiceTest {
     @Test
     public void shouldLoadFilmFromRepository() throws Exception {
         ShowFilmCommand showFilmCommand = ShowFilmCommandBuilder.aShowFilmCommand()
-                .withId("1")
+                .withId(1L)
                 .build();
 
         filmApplicationService.loadFilm(showFilmCommand);

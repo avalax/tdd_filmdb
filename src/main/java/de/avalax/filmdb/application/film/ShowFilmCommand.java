@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class ShowFilmCommand {
-    private String id;
+    private Long id;
 }
