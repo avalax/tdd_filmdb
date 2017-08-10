@@ -1,6 +1,7 @@
 package de.avalax.filmdb.application.film;
 
 import de.avalax.filmdb.domain.model.Film;
+import de.avalax.filmdb.domain.model.FilmAssert;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,11 +14,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
-import static de.avalax.filmdb.application.film.AddFilmToRepositoryCommandBuilder.anAddFilmToRepositoryCommand;
-import static de.avalax.filmdb.application.film.DeleteFilmToRepositoryCommandBuilder.aDeleteFilmToRepositoryCommand;
-import static java.util.Collections.singleton;
+import static de.avalax.filmdb.application.film.AddFilmCommandBuilder.anAddFilmToRepositoryCommand;
+import static de.avalax.filmdb.application.film.DeleteFilmCommandBuilder.aDeleteFilmToRepositoryCommand;
 import static java.util.Collections.singletonList;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -42,12 +41,12 @@ public class FilmControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"));
 
-        verify(filmApplicationService).addFilmToRepository(anAddFilmToRepositoryCommand().withName("aFilmName").build());
+        verify(filmApplicationService).addFilm(anAddFilmToRepositoryCommand().withName("aFilmName").build());
     }
 
     @Test
-    public void deleteFilmShouldDelegateCommandToApplicationService() throws Exception {
-        mvc.perform(delete("/").param("id", "1"))
+    public void deleteFilmFromRepository() throws Exception {
+        mvc.perform(delete("/1"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"));
 
@@ -55,9 +54,22 @@ public class FilmControllerTest {
     }
 
     @Test
+    public void showFilmFromRepository() throws Exception {
+        Film expectedFilm = Film.builder().name("aFilmToShow").build();
+        doReturn(expectedFilm).when(filmApplicationService).loadFilm(ShowFilmCommandBuilder.aShowFilmCommand().withId("1").build());
+
+        ModelAndView modelAndView = mvc.perform(get("/1"))
+                .andExpect(status().isOk())
+                .andReturn().getModelAndView();
+
+        Film film = (Film) modelAndView.getModelMap().get("film");
+        FilmAssert.assertThat(film).hasName("aFilmToShow");
+    }
+
+    @Test
     public void allFilmsFromRepositoryShouldBeListed() throws Exception {
         Film expectedFilm = Film.builder().name("aFilmToShow").build();
-        doReturn(singletonList(expectedFilm)).when(filmApplicationService).loadFilms();
+        doReturn(singletonList(expectedFilm)).when(filmApplicationService).loadAllFilms();
 
         ModelAndView modelAndView = mvc.perform(get("/"))
                 .andExpect(status().isOk())

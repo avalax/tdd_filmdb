@@ -38,19 +38,19 @@ public class ApplicationAcceptanceTest {
     private FilmRepository filmRepository;
 
     @Test
-    public void postNewFilmShouldBeAddedToDatabase() throws Exception {
+    public void postNewFilmShouldBeAddedToRepository() throws Exception {
         mockMvc.perform(post("/").param("name", "aFilmName"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"));
 
-        FilmAssert.assertThat(filmRepository.load(new FilmId(1L))).hasName("aFilmName");
+        FilmAssert.assertThat(filmRepository.load(FilmId.builder().id(1L).build())).hasName("aFilmName");
     }
 
     @Test
-    public void deleteExistingFilmShouldBeRemovedFromDatabase() throws Exception {
+    public void deleteExistingFilmShouldBeRemovedFromRepository() throws Exception {
         filmRepository.save(Film.builder().name("anyFilmName").build());
 
-        mockMvc.perform(delete("/").param("id", "1"))
+        mockMvc.perform(delete("/1"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"));
 
@@ -58,7 +58,20 @@ public class ApplicationAcceptanceTest {
     }
 
     @Test
-    public void allFilmsFromRepositoryShouldBeListed() throws Exception {
+    public void showExistingFilmFromRepository() throws Exception {
+        filmRepository.save(Film.builder().name("awesomeFilm").build());
+
+        ModelAndView modelAndView = mockMvc.perform(get("/1"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("film"))
+                .andReturn().getModelAndView();
+
+        Film film = (Film) modelAndView.getModelMap().get("film");
+        FilmAssert.assertThat(film).hasName("awesomeFilm");
+    }
+
+    @Test
+    public void showAllFilmsFromRepository() throws Exception {
         filmRepository.save(Film.builder().name("Film A").build());
         filmRepository.save(Film.builder().name("Film B").build());
 

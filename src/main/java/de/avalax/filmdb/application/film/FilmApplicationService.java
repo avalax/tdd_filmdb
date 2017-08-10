@@ -14,19 +14,26 @@ public class FilmApplicationService {
     @Autowired
     private FilmRepository filmRepository;
 
-    public void addFilmToRepository(AddFilmToRepositoryCommand addFilmToRepositoryCommand) {
+    public void addFilm(AddFilmCommand addFilmCommand) {
         Film film = Film.builder()
-                .name(addFilmToRepositoryCommand.getName())
+                .name(addFilmCommand.getName())
                 .build();
         filmRepository.save(film);
     }
 
-    public void deleteFilmFromRepository(DeleteFilmToRepositoryCommand deleteFilmToRepositoryCommand) {
-        String id = deleteFilmToRepositoryCommand.getId();
-        filmRepository.delete(new FilmId(Long.valueOf(id)));
+    public void deleteFilmFromRepository(DeleteFilmCommand deleteFilmCommand) {
+        String id = deleteFilmCommand.getId();
+        FilmId filmId = FilmId.builder().id(Long.valueOf(id)).build();
+        filmRepository.delete(filmId);
     }
 
-    public List<Film> loadFilms() {
+    public List<Film> loadAllFilms() {
         return filmRepository.loadAll();
+    }
+
+    public Film loadFilm(ShowFilmCommand showFilmCommand) {
+        String id = showFilmCommand.getId();
+        FilmId filmId = FilmId.builder().id(Long.valueOf(id)).build();
+        return filmRepository.load(filmId);
     }
 }

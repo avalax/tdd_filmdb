@@ -21,19 +21,25 @@ public class FilmController {
 
     @RequestMapping(method = GET)
     public ModelAndView listFilms(ModelMap model) {
-        model.addAttribute("films", filmApplicationService.loadFilms());
+        model.addAttribute("films", filmApplicationService.loadAllFilms());
         return new ModelAndView("index");
     }
 
     @RequestMapping(method = POST)
-    public RedirectView addFilmToRepository(AddFilmToRepositoryCommand addFilmToRepositoryCommand) {
-        filmApplicationService.addFilmToRepository(addFilmToRepositoryCommand);
+    public RedirectView addFilm(AddFilmCommand addFilmCommand) {
+        filmApplicationService.addFilm(addFilmCommand);
         return new RedirectView("/");
     }
 
-    @RequestMapping(method = DELETE)
-    public RedirectView deleteFilmFromRepository(DeleteFilmToRepositoryCommand deleteFilmToRepositoryCommand) {
-        filmApplicationService.deleteFilmFromRepository(deleteFilmToRepositoryCommand);
+    @RequestMapping(path = "/{id}", method = GET)
+    public ModelAndView showFilm(ShowFilmCommand showFilmCommand, ModelMap model) {
+        model.addAttribute("film", filmApplicationService.loadFilm(showFilmCommand));
+        return new ModelAndView("film");
+    }
+
+    @RequestMapping(path = "/{id}", method = DELETE)
+    public RedirectView deleteFilm(DeleteFilmCommand deleteFilmCommand) {
+        filmApplicationService.deleteFilmFromRepository(deleteFilmCommand);
         return new RedirectView("/");
     }
 }

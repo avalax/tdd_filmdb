@@ -28,6 +28,6 @@ public class Film {
     }
 
     public FilmId getId() {
-        return new FilmId(id);
+        return FilmId.builder().id(id).build();
     }
 }
