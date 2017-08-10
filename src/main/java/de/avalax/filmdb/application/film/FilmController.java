@@ -1,8 +1,10 @@
 package de.avalax.filmdb.application.film;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
@@ -18,8 +20,9 @@ public class FilmController {
     private FilmApplicationService filmApplicationService;
 
     @RequestMapping(method = GET)
-    public String nothing() {
-        return "nothing";
+    public ModelAndView listFilms(ModelMap model) {
+        model.addAttribute("films", filmApplicationService.loadFilms());
+        return new ModelAndView("index");
     }
 
     @RequestMapping(method = POST)

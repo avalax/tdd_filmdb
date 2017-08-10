@@ -6,6 +6,8 @@ import de.avalax.filmdb.domain.model.FilmRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class FilmApplicationService {
 
@@ -22,5 +24,9 @@ public class FilmApplicationService {
     public void deleteFilmFromRepository(DeleteFilmToRepositoryCommand deleteFilmToRepositoryCommand) {
         String id = deleteFilmToRepositoryCommand.getId();
         filmRepository.delete(new FilmId(Long.valueOf(id)));
+    }
+
+    public List<Film> loadFilms() {
+        return filmRepository.loadAll();
     }
 }
