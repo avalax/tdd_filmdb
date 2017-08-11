@@ -45,8 +45,7 @@ public class FilmController {
     }
 
     @RequestMapping(path = "film/{id}", method = DELETE)
-    public RedirectView deleteFilm(DeleteFilmCommand deleteFilmCommand) {
+    public void deleteFilm(DeleteFilmCommand deleteFilmCommand) {
         filmApplicationService.deleteFilmFromRepository(deleteFilmCommand);
-        return new RedirectView("/");
     }
 }
