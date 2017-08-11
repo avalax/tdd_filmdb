@@ -3,11 +3,14 @@ package de.avalax.filmdb.application.film;
 import de.avalax.filmdb.domain.model.FilmId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
+
+import javax.validation.Valid;
 
 import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -17,6 +20,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @RestController
 @RequestMapping("/")
 public class FilmController {
+    private static final String MODEL_ATTRIBUTE_FILM = "film";
 
     @Autowired
     private FilmApplicationService filmApplicationService;
@@ -28,21 +32,35 @@ public class FilmController {
     }
 
     @RequestMapping(path = "/film", method = POST)
-    public RedirectView addFilm(AddFilmCommand addFilmCommand) {
+    public ModelAndView addFilm(
+            @ModelAttribute(MODEL_ATTRIBUTE_FILM)
+            @Valid AddFilmCommand addFilmCommand,
+            BindingResult result,
+            ModelMap model) {
+        if (result.hasErrors()) {
+            return listFilms(model);
+        }
         FilmId filmId = filmApplicationService.addFilm(addFilmCommand);
-        return new RedirectView("/film/" + filmId.getId());
+        return new ModelAndView("redirect:/film/" + filmId.getId());
     }
 
     @RequestMapping(path = "/film/{id}", method = GET)
     public ModelAndView showFilm(ShowFilmCommand showFilmCommand, ModelMap model) {
-        model.addAttribute("film", filmApplicationService.loadFilm(showFilmCommand));
+        model.addAttribute(MODEL_ATTRIBUTE_FILM, filmApplicationService.loadFilm(showFilmCommand));
         return new ModelAndView("film");
     }
 
     @RequestMapping(path = "/film/{id}", method = POST)
-    public RedirectView modifyFilm(ModifyFilmCommand modifyFilmCommand) {
+    public ModelAndView modifyFilm(
+            @ModelAttribute(MODEL_ATTRIBUTE_FILM)
+            @Valid ModifyFilmCommand modifyFilmCommand,
+            BindingResult result,
+            ModelMap model) {
+        if (result.hasErrors()) {
+            return new ModelAndView("film");
+        }
         filmApplicationService.modifyFilm(modifyFilmCommand);
-        return new RedirectView("/film/" + modifyFilmCommand.getId());
+        return new ModelAndView("redirect:/film/" + modifyFilmCommand.getId().getId());
     }
 
     @RequestMapping(path = "film/{id}", method = DELETE)

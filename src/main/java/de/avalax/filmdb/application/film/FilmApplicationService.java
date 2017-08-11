@@ -34,13 +34,11 @@ public class FilmApplicationService {
     }
 
     public Film loadFilm(ShowFilmCommand showFilmCommand) {
-        FilmId filmId = FilmId.builder().id(showFilmCommand.getId()).build();
-        return filmRepository.load(filmId);
+        return filmRepository.load(showFilmCommand.getId());
     }
 
     public void modifyFilm(ModifyFilmCommand modifyFilmCommand) {
-        FilmId id = FilmId.builder().id(modifyFilmCommand.getId()).build();
-        Film film = filmRepository.load(id);
+        Film film = filmRepository.load(modifyFilmCommand.getId());
         film.setName(modifyFilmCommand.getName());
         film.setGenre(modifyFilmCommand.getGenre());
         film.setYear(modifyFilmCommand.getYear());
