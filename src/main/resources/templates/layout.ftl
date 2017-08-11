@@ -7,12 +7,24 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <@header/>
         <link rel="stylesheet" href="/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/css/jquery-ui.min.css">
+        <link rel="stylesheet" href="/css/film.css">
         <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
       </head>
       <body>
-        <@content/>
+        <@breadcrumb/>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-2 hidden-sm"></div>
+                <div class="col-md-8 col-sm-12">
+                    <@content/>
+                </div>
+            </div>
+        </div>
         <script src="/js/jquery-3.2.1.min.js"></script>
+        <script src="/js/jquery-ui.min.js"></script>
         <script src="/js/bootstrap.min.js"></script>
+        <script src="/js/film.js"></script>
       </body>
     </html>
 </#macro>
