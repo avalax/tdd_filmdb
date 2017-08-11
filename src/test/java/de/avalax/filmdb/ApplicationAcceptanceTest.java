@@ -101,7 +101,8 @@ public class ApplicationAcceptanceTest {
         filmRepository.save(Film.builder().name("anyFilmName").build());
 
         mockMvc.perform(delete("/film/1"))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(content().string(""));
 
         Assertions.assertThat(filmRepository.loadAll()).isEmpty();
     }
