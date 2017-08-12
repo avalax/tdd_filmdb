@@ -2,6 +2,7 @@ package de.avalax.filmdb.port.adapter.persistence.film;
 
 import de.avalax.filmdb.domain.model.Film;
 import de.avalax.filmdb.domain.model.FilmId;
+import de.avalax.filmdb.domain.model.FilmNotFoundException;
 import de.avalax.filmdb.domain.model.FilmRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -22,8 +23,12 @@ public class HibernateFilmRepository implements FilmRepository {
     }
 
     @Override
-    public Film load(FilmId id) {
-        return filmDAO.findOne(id.getId());
+    public Film load(FilmId id) throws FilmNotFoundException {
+        Film film = filmDAO.findOne(id.getId());
+        if (film == null) {
+            throw new FilmNotFoundException();
+        }
+        return film;
     }
 
     @Override
@@ -34,7 +39,11 @@ public class HibernateFilmRepository implements FilmRepository {
     }
 
     @Override
-    public void delete(FilmId filmId) {
-        filmDAO.delete(filmId.getId());
+    public void delete(FilmId filmId) throws FilmNotFoundException {
+        Film film = filmDAO.findOne(filmId.getId());
+        if (film == null) {
+            throw new FilmNotFoundException();
+        }
+        filmDAO.delete(film);
     }
 }

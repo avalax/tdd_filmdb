@@ -2,6 +2,7 @@ package de.avalax.filmdb.application.film;
 
 import de.avalax.filmdb.domain.model.Film;
 import de.avalax.filmdb.domain.model.FilmId;
+import de.avalax.filmdb.domain.model.FilmNotFoundException;
 import de.avalax.filmdb.domain.model.FilmRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,7 @@ public class FilmApplicationService {
         return filmRepository.save(film);
     }
 
-    public void deleteFilmFromRepository(DeleteFilmCommand deleteFilmCommand) {
+    public void deleteFilmFromRepository(DeleteFilmCommand deleteFilmCommand) throws FilmNotFoundException {
         FilmId filmId = FilmId.builder().id(deleteFilmCommand.getId()).build();
         filmRepository.delete(filmId);
     }
@@ -33,11 +34,11 @@ public class FilmApplicationService {
         return filmRepository.loadAll();
     }
 
-    public Film loadFilm(ShowFilmCommand showFilmCommand) {
+    public Film loadFilm(ShowFilmCommand showFilmCommand) throws FilmNotFoundException {
         return filmRepository.load(showFilmCommand.getId());
     }
 
-    public void modifyFilm(ModifyFilmCommand modifyFilmCommand) {
+    public void modifyFilm(ModifyFilmCommand modifyFilmCommand) throws FilmNotFoundException {
         Film film = filmRepository.load(modifyFilmCommand.getId());
         film.setName(modifyFilmCommand.getName());
         film.setGenre(modifyFilmCommand.getGenre());

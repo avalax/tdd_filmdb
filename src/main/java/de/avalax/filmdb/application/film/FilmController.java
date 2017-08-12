@@ -1,6 +1,7 @@
 package de.avalax.filmdb.application.film;
 
 import de.avalax.filmdb.domain.model.FilmId;
+import de.avalax.filmdb.domain.model.FilmNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -45,7 +46,7 @@ public class FilmController {
     }
 
     @RequestMapping(path = "/film/{id}", method = GET)
-    public ModelAndView showFilm(ShowFilmCommand showFilmCommand, ModelMap model) {
+    public ModelAndView showFilm(ShowFilmCommand showFilmCommand, ModelMap model) throws FilmNotFoundException {
         model.addAttribute(MODEL_ATTRIBUTE_FILM, filmApplicationService.loadFilm(showFilmCommand));
         return new ModelAndView("film");
     }
@@ -55,7 +56,7 @@ public class FilmController {
             @ModelAttribute(MODEL_ATTRIBUTE_FILM)
             @Valid ModifyFilmCommand modifyFilmCommand,
             BindingResult result,
-            ModelMap model) {
+            ModelMap model) throws FilmNotFoundException {
         if (result.hasErrors()) {
             return new ModelAndView("film");
         }
@@ -65,7 +66,7 @@ public class FilmController {
 
     @RequestMapping(path = "film/{id}", method = DELETE)
     @ResponseBody
-    public String deleteFilm(DeleteFilmCommand deleteFilmCommand) {
+    public String deleteFilm(DeleteFilmCommand deleteFilmCommand) throws FilmNotFoundException {
         filmApplicationService.deleteFilmFromRepository(deleteFilmCommand);
         return "";
     }

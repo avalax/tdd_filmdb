@@ -2,6 +2,7 @@ package de.avalax.filmdb.port.adapter.persistence.film;
 
 import de.avalax.filmdb.domain.model.Film;
 import de.avalax.filmdb.domain.model.FilmId;
+import de.avalax.filmdb.domain.model.FilmNotFoundException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,5 +50,15 @@ public class HibernateFilmRepositoryIntegrationTest {
         List<Film> films = filmRepository.loadAll();
 
         assertThat(films).extracting(Film::getId).containsExactly(filmId);
+    }
+
+    @Test(expected = FilmNotFoundException.class)
+    public void loadUnknownFilmShouldThrowException() throws Exception {
+        filmRepository.load(FilmId.builder().id(-1L).build());
+    }
+
+    @Test(expected = FilmNotFoundException.class)
+    public void deleteUnknownFilmShouldThrowException() throws Exception {
+        filmRepository.delete(FilmId.builder().id(-1L).build());
     }
 }
