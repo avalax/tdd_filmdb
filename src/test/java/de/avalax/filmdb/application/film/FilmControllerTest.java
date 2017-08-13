@@ -32,7 +32,7 @@ public class FilmControllerTest {
     private FilmApplicationService filmApplicationService;
 
     @Test
-    public void invalidAddFilmCommandShouldNotValidate() throws Exception {
+    public void addFilmCommandWithInvalidDataShouldNotValidate() throws Exception {
         mockMvc.perform(post("/film")
                 .param("year", "invalidYear")
                 .param("rating", "4"))
@@ -41,9 +41,10 @@ public class FilmControllerTest {
     }
 
     @Test
-    public void invalidModifyFilmCommandShouldNotValidate() throws Exception {
+    public void modifyFilmCommandWithInvalidDataShouldNotValidate() throws Exception {
         ShowFilmCommand showFilmCommand = aShowFilmCommand().withId(1L).build();
-        doReturn(Film.builder().name("oldFilmName").build()).when(filmApplicationService).loadFilm(showFilmCommand);
+        doReturn(Film.builder().name("oldFilmName").build()).when(filmApplicationService)
+                .loadFilm(showFilmCommand);
 
         mockMvc.perform(post("/film/1")
                 .param("year", "invalidYear")
@@ -54,21 +55,24 @@ public class FilmControllerTest {
 
     @Test
     public void unknownFilmShouldResultIntoPageNotFound() throws Exception {
-        doThrow(FilmNotFoundException.class).when(filmApplicationService).loadFilm(any(ShowFilmCommand.class));
+        doThrow(FilmNotFoundException.class).when(filmApplicationService)
+                .loadFilm(any(ShowFilmCommand.class));
 
         mockMvc.perform(get("/film/1")).andExpect(status().isNotFound());
     }
 
     @Test
-    public void modifyFilmShouldResultIntoPageNotFound() throws Exception {
-        doThrow(FilmNotFoundException.class).when(filmApplicationService).modifyFilm(any(ModifyFilmCommand.class));
+    public void modifyUnknownFilmShouldResultIntoPageNotFound() throws Exception {
+        doThrow(FilmNotFoundException.class).when(filmApplicationService)
+                .modifyFilm(any(ModifyFilmCommand.class));
 
         mockMvc.perform(post("/film/1").param("name", "aFilmName")).andExpect(status().isNotFound());
     }
 
     @Test
-    public void deleteFilmShouldResultIntoPageNotFound() throws Exception {
-        doThrow(FilmNotFoundException.class).when(filmApplicationService).deleteFilmFromRepository(any(DeleteFilmCommand.class));
+    public void deleteUnknownFilmShouldResultIntoPageNotFound() throws Exception {
+        doThrow(FilmNotFoundException.class).when(filmApplicationService)
+                .deleteFilmFromRepository(any(DeleteFilmCommand.class));
 
         mockMvc.perform(delete("/film/1")).andExpect(status().isNotFound());
     }

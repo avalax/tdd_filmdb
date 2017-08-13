@@ -39,24 +39,25 @@ public class ApplicationAcceptanceTest {
     private FilmRepository filmRepository;
 
     @Test
-    public void newFilmShouldBeAddedToRepository() throws Exception {
-        mockMvc.perform(post("/film")
-                .param("name", "aFilmName")
-                .param("genre", "aFilmGenre")
-                .param("year", "2017")
-                .param("rating", "3"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/film/1"));
+    public void showAllFilmsFromRepository() throws Exception {
+        filmRepository.save(Film.builder().name("Film A").genre("Genre A").year(1999).rating(3).build());
+        filmRepository.save(Film.builder().name("Film B").genre("Genre B").year(2017).rating(1).build());
 
-        FilmAssert.assertThat(filmRepository.load(FilmId.builder().id(1L).build()))
-                .hasName("aFilmName")
-                .hasGenre("aFilmGenre")
-                .hasYear(2017)
-                .hasRating(3);
+        ModelAndView modelAndView = mockMvc.perform(get("/"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("index"))
+                .andReturn().getModelAndView();
+
+        @SuppressWarnings("unchecked")
+        List<Film> films = (List) modelAndView.getModelMap().get("films");
+        Assertions.assertThat(films).extracting(Film::getName).contains("Film A", "Film B");
+        Assertions.assertThat(films).extracting(Film::getGenre).contains("Genre A", "Genre B");
+        Assertions.assertThat(films).extracting(Film::getYear).contains(1999, 2017);
+        Assertions.assertThat(films).extracting(Film::getRating).contains(3, 1);
     }
 
     @Test
-    public void showExistingFilmFromRepository() throws Exception {
+    public void showFilmFromRepository() throws Exception {
         filmRepository.save(Film.builder()
                 .name("aFilmName")
                 .genre("aFilmGenre")
@@ -78,7 +79,24 @@ public class ApplicationAcceptanceTest {
     }
 
     @Test
-    public void modifyExistingFilmInRepository() throws Exception {
+    public void addNewFilmToRepository() throws Exception {
+        mockMvc.perform(post("/film")
+                .param("name", "aFilmName")
+                .param("genre", "aFilmGenre")
+                .param("year", "2017")
+                .param("rating", "3"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/film/1"));
+
+        FilmAssert.assertThat(filmRepository.load(FilmId.builder().id(1L).build()))
+                .hasName("aFilmName")
+                .hasGenre("aFilmGenre")
+                .hasYear(2017)
+                .hasRating(3);
+    }
+
+    @Test
+    public void modifyFilmFromRepository() throws Exception {
         filmRepository.save(Film.builder().name("oldFilmName").build());
 
         mockMvc.perform(post("/film/1")
@@ -97,7 +115,7 @@ public class ApplicationAcceptanceTest {
     }
 
     @Test
-    public void deleteExistingFilmFromRepository() throws Exception {
+    public void deleteFilmFromRepository() throws Exception {
         filmRepository.save(Film.builder().name("anyFilmName").build());
 
         mockMvc.perform(delete("/film/1"))
@@ -105,23 +123,5 @@ public class ApplicationAcceptanceTest {
                 .andExpect(content().string(""));
 
         Assertions.assertThat(filmRepository.loadAll()).isEmpty();
-    }
-
-    @Test
-    public void showAllFilmsFromRepository() throws Exception {
-        filmRepository.save(Film.builder().name("Film A").genre("Genre A").year(1999).rating(3).build());
-        filmRepository.save(Film.builder().name("Film B").genre("Genre B").year(2017).rating(1).build());
-
-        ModelAndView modelAndView = mockMvc.perform(get("/"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("index"))
-                .andReturn().getModelAndView();
-
-        @SuppressWarnings("unchecked")
-        List<Film> films = (List) modelAndView.getModelMap().get("films");
-        Assertions.assertThat(films).extracting(Film::getName).contains("Film A", "Film B");
-        Assertions.assertThat(films).extracting(Film::getGenre).contains("Genre A", "Genre B");
-        Assertions.assertThat(films).extracting(Film::getYear).contains(1999, 2017);
-        Assertions.assertThat(films).extracting(Film::getRating).contains(3, 1);
     }
 }

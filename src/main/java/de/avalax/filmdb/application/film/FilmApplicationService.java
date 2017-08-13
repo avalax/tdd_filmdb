@@ -15,6 +15,14 @@ public class FilmApplicationService {
     @Autowired
     private FilmRepository filmRepository;
 
+    public List<Film> loadAllFilms() {
+        return filmRepository.loadAll();
+    }
+
+    public Film loadFilm(ShowFilmCommand showFilmCommand) throws FilmNotFoundException {
+        return filmRepository.load(showFilmCommand.getId());
+    }
+
     public FilmId addFilm(AddFilmCommand addFilmCommand) {
         Film film = Film.builder()
                 .name(addFilmCommand.getName())
@@ -25,19 +33,6 @@ public class FilmApplicationService {
         return filmRepository.save(film);
     }
 
-    public void deleteFilmFromRepository(DeleteFilmCommand deleteFilmCommand) throws FilmNotFoundException {
-        FilmId filmId = FilmId.builder().id(deleteFilmCommand.getId()).build();
-        filmRepository.delete(filmId);
-    }
-
-    public List<Film> loadAllFilms() {
-        return filmRepository.loadAll();
-    }
-
-    public Film loadFilm(ShowFilmCommand showFilmCommand) throws FilmNotFoundException {
-        return filmRepository.load(showFilmCommand.getId());
-    }
-
     public void modifyFilm(ModifyFilmCommand modifyFilmCommand) throws FilmNotFoundException {
         Film film = filmRepository.load(modifyFilmCommand.getId());
         film.setName(modifyFilmCommand.getName());
@@ -45,5 +40,10 @@ public class FilmApplicationService {
         film.setYear(modifyFilmCommand.getYear());
         film.setRating(modifyFilmCommand.getRating());
         filmRepository.save(film);
+    }
+
+    public void deleteFilmFromRepository(DeleteFilmCommand deleteFilmCommand) throws FilmNotFoundException {
+        FilmId filmId = FilmId.builder().id(deleteFilmCommand.getId()).build();
+        filmRepository.delete(filmId);
     }
 }

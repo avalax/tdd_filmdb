@@ -13,7 +13,7 @@ import java.util.List;
 
 import static de.avalax.filmdb.application.film.AddFilmCommandBuilder.anAddFilmCommand;
 import static de.avalax.filmdb.application.film.DeleteFilmCommandBuilder.aDeleteFilmToRepositoryCommand;
-import static de.avalax.filmdb.application.film.ModifyFilmCommandBuilder.*;
+import static de.avalax.filmdb.application.film.ModifyFilmCommandBuilder.aModifyFilmCommand;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
@@ -27,6 +27,26 @@ public class FilmApplicationServiceTest {
 
     @Mock
     private FilmRepository filmRepository;
+
+    @Test
+    public void shouldLoadAllFilmsFromRepository() throws Exception {
+        doReturn(singletonList(Film.builder().name("aFilmName").build())).when(filmRepository).loadAll();
+
+        List<Film> films = filmApplicationService.loadAllFilms();
+
+        assertThat(films).extracting(Film::getName).containsExactly("aFilmName");
+    }
+
+    @Test
+    public void shouldLoadFilmFromRepository() throws Exception {
+        ShowFilmCommand showFilmCommand = ShowFilmCommandBuilder.aShowFilmCommand()
+                .withId(1L)
+                .build();
+
+        filmApplicationService.loadFilm(showFilmCommand);
+
+        verify(filmRepository).load(FilmId.builder().id(1L).build());
+    }
 
     @Test
     public void shouldAddFilmToRepository() throws Exception {
@@ -48,7 +68,7 @@ public class FilmApplicationServiceTest {
     }
 
     @Test
-    public void shouldSaveModifiedFilmIntoRepository() throws Exception {
+    public void shouldModifyFilmInRepository() throws Exception {
         FilmId filmId = FilmId.builder().id(1L).build();
         doReturn(Film.builder().id(1L).build()).when(filmRepository).load(filmId);
         ModifyFilmCommand modifyFilmCommand = aModifyFilmCommand()
@@ -79,25 +99,5 @@ public class FilmApplicationServiceTest {
         filmApplicationService.deleteFilmFromRepository(deleteFilmCommand);
 
         verify(filmRepository).delete(FilmId.builder().id(1L).build());
-    }
-
-    @Test
-    public void shouldLoadFilmFromRepository() throws Exception {
-        ShowFilmCommand showFilmCommand = ShowFilmCommandBuilder.aShowFilmCommand()
-                .withId(1L)
-                .build();
-
-        filmApplicationService.loadFilm(showFilmCommand);
-
-        verify(filmRepository).load(FilmId.builder().id(1L).build());
-    }
-
-    @Test
-    public void shouldLoadFilmsFromRepository() throws Exception {
-        doReturn(singletonList(Film.builder().name("aFilmName").build())).when(filmRepository).loadAll();
-
-        List<Film> films = filmApplicationService.loadAllFilms();
-
-        assertThat(films).extracting(Film::getName).containsExactly("aFilmName");
     }
 }

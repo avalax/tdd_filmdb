@@ -24,6 +24,16 @@ public class HibernateFilmRepositoryIntegrationTest {
     private HibernateFilmRepository filmRepository;
 
     @Test
+    public void shouldLoadAllFilms() throws Exception {
+        Film film = Film.builder().name("aFilmName").build();
+        FilmId filmId = filmRepository.save(film);
+
+        List<Film> films = filmRepository.loadAll();
+
+        assertThat(films).extracting(Film::getId).containsExactly(filmId);
+    }
+
+    @Test
     public void shouldSaveFilmToRepository() throws Exception {
         Film film = Film.builder().name("aFilmName").build();
 
@@ -40,16 +50,6 @@ public class HibernateFilmRepositoryIntegrationTest {
         filmRepository.delete(filmId);
 
         assertThat(filmRepository.loadAll()).isEmpty();
-    }
-
-    @Test
-    public void shouldLoadFilmsFromRepository() throws Exception {
-        Film film = Film.builder().name("aFilmName").build();
-        FilmId filmId = filmRepository.save(film);
-
-        List<Film> films = filmRepository.loadAll();
-
-        assertThat(films).extracting(Film::getId).containsExactly(filmId);
     }
 
     @Test(expected = FilmNotFoundException.class)

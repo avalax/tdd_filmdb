@@ -27,9 +27,15 @@ public class FilmController {
     private FilmApplicationService filmApplicationService;
 
     @RequestMapping(method = GET)
-    public ModelAndView listFilms(ModelMap model) {
+    public ModelAndView showAllFilms(ModelMap model) {
         model.addAttribute("films", filmApplicationService.loadAllFilms());
         return new ModelAndView("index");
+    }
+
+    @RequestMapping(path = "/film/{id}", method = GET)
+    public ModelAndView showFilm(ShowFilmCommand showFilmCommand, ModelMap model) throws FilmNotFoundException {
+        model.addAttribute(MODEL_ATTRIBUTE_FILM, filmApplicationService.loadFilm(showFilmCommand));
+        return new ModelAndView("film");
     }
 
     @RequestMapping(path = "/film", method = POST)
@@ -39,16 +45,10 @@ public class FilmController {
             BindingResult result,
             ModelMap model) {
         if (result.hasErrors()) {
-            return listFilms(model);
+            return showAllFilms(model);
         }
         FilmId filmId = filmApplicationService.addFilm(addFilmCommand);
         return new ModelAndView("redirect:/film/" + filmId.getId());
-    }
-
-    @RequestMapping(path = "/film/{id}", method = GET)
-    public ModelAndView showFilm(ShowFilmCommand showFilmCommand, ModelMap model) throws FilmNotFoundException {
-        model.addAttribute(MODEL_ATTRIBUTE_FILM, filmApplicationService.loadFilm(showFilmCommand));
-        return new ModelAndView("film");
     }
 
     @RequestMapping(path = "/film/{id}", method = POST)
