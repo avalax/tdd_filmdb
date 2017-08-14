@@ -19,7 +19,7 @@
             <#list films as film>
                 <li class="list-group-item">
                     <a href="/film/${film.id.id}" class="btn btn-danger js-delete badge">Delete</a>
-                    <a href="/film/${film.id.id}">${film.name}</a>
+                    <a class="hideOverflow" href="/film/${film.id.id}">${film.name}</a>
                     <#list 0..<film.rating as i><span class="glyphicon glyphicon-star" aria-hidden="true"></span></#list>
                 </li>
             </#list>

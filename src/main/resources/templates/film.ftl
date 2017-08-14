@@ -12,7 +12,7 @@
 
 <#macro content>
     <div class="panel panel-default">
-        <div class="panel-heading">${film.name!}</div>
+        <div class="panel-heading hideOverflowFull">${film.name!}</div>
         <div class="panel-body">
            <#include "form.ftl">
         <div>
