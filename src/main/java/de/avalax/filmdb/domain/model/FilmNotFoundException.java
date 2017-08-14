@@ -1,8 +1,4 @@
 package de.avalax.filmdb.domain.model;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
-
-@ResponseStatus(HttpStatus.NOT_FOUND)
-public class FilmNotFoundException extends Exception {
+abstract public class FilmNotFoundException extends Exception {
 }

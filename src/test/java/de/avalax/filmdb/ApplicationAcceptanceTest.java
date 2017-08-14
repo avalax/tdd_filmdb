@@ -1,5 +1,9 @@
 package de.avalax.filmdb;
 
+import de.avalax.filmdb.application.film.DeleteFilmCommand;
+import de.avalax.filmdb.application.film.ModifyFilmCommand;
+import de.avalax.filmdb.application.film.ResponseStatusExceptionFactory;
+import de.avalax.filmdb.application.film.ShowFilmCommand;
 import de.avalax.filmdb.domain.model.Film;
 import de.avalax.filmdb.domain.model.FilmAssert;
 import de.avalax.filmdb.domain.model.FilmId;
@@ -17,6 +21,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -123,5 +129,23 @@ public class ApplicationAcceptanceTest {
                 .andExpect(content().string(""));
 
         Assertions.assertThat(filmRepository.loadAll()).isEmpty();
+    }
+
+    @Test
+    public void unknownFilmShouldResultIntoPageNotFound() throws Exception {
+       mockMvc.perform(get("/film/1"))
+               .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void modifyUnknownFilmShouldResultIntoPageNotFound() throws Exception {
+        mockMvc.perform(post("/film/1").param("name", "aFilmName"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void deleteUnknownFilmShouldResultIntoPageNotFound() throws Exception {
+        mockMvc.perform(delete("/film/1"))
+                .andExpect(status().isNotFound());
     }
 }

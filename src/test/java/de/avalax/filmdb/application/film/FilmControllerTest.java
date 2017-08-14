@@ -10,6 +10,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static de.avalax.filmdb.application.film.ResponseStatusExceptionFactory.*;
 import static de.avalax.filmdb.application.film.ShowFilmCommandBuilder.aShowFilmCommand;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doReturn;
@@ -51,29 +52,5 @@ public class FilmControllerTest {
                 .param("rating", "0"))
                 .andExpect(status().isOk())
                 .andExpect(model().hasErrors());
-    }
-
-    @Test
-    public void unknownFilmShouldResultIntoPageNotFound() throws Exception {
-        doThrow(FilmNotFoundException.class).when(filmApplicationService)
-                .loadFilm(any(ShowFilmCommand.class));
-
-        mockMvc.perform(get("/film/1")).andExpect(status().isNotFound());
-    }
-
-    @Test
-    public void modifyUnknownFilmShouldResultIntoPageNotFound() throws Exception {
-        doThrow(FilmNotFoundException.class).when(filmApplicationService)
-                .modifyFilm(any(ModifyFilmCommand.class));
-
-        mockMvc.perform(post("/film/1").param("name", "aFilmName")).andExpect(status().isNotFound());
-    }
-
-    @Test
-    public void deleteUnknownFilmShouldResultIntoPageNotFound() throws Exception {
-        doThrow(FilmNotFoundException.class).when(filmApplicationService)
-                .deleteFilmFromRepository(any(DeleteFilmCommand.class));
-
-        mockMvc.perform(delete("/film/1")).andExpect(status().isNotFound());
     }
 }
