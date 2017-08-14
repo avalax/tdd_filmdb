@@ -2,17 +2,20 @@ package de.avalax.filmdb.application.film;
 
 import de.avalax.filmdb.domain.model.FilmId;
 import lombok.Data;
-import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Data
 public class ModifyFilmCommand {
     private Long id;
-    @NotBlank(message = "Please provide a name")
+    @NotNull(message = "Please provide a name")
+    @Size(min = 1, max = 254, message = "Please provide a name with max 254 chars")
     private String name;
+    @Size(max = 254, message = "Please provide a genre with max 254 chars")
     private String genre;
     @Min(value = 1, message = "Please provide a rating between 1 - 3")
     @Max(value = 3, message = "Please provide a rating between 1 - 3")
