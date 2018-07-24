@@ -29,7 +29,7 @@
 
   <div class="form-group">
     <label for="rating">Rating</label>
-    <select id="year" required type="radio" name="rating" class="form-control">
+    <select id="rating" required type="radio" name="rating" class="form-control">
         <option value="1"<#if film?? && film.rating?? && film.rating==1> selected="selected"</#if>>1</option>
         <option value="2"<#if film?? && film.rating?? && film.rating==2> selected="selected"</#if>>2</option>
         <option value="3"<#if film?? && film.rating?? && film.rating==3> selected="selected"</#if>>3</option>
