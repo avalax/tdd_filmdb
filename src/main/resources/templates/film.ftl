@@ -15,7 +15,7 @@
         <div class="panel-heading hideOverflowFull">${film.name!}</div>
         <div class="panel-body">
            <#include "form.ftl">
-        <div>
+        </div>
     </div>
 </#macro>
 
